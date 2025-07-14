@@ -45,7 +45,7 @@ optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
 def train(line_tensor, category_tensor):
   hidden = rnn.init_hidden()
   for i in range(line_tensor.size()[0]):
-    output, hidden = rnn.forward(line_tensor[i], hidden)
+    output, hidden = rnn.(line_tensor[i], hidden)
   loss = criterion(output, category_tensor)
   optimizer.zero_grad()
   loss.backward()
