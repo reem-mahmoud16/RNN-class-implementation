@@ -28,13 +28,14 @@ class RNN(nn.Module):
 
 #----------------------------loading data and creating instance of RNN class--------------------------------------------------------
 category_lines, all_categories = load_data()
-n_hidden = 256
+n_hidden = 128
 rnn = RNN(N_LETTERS, n_hidden, len(all_categories))
+
 
 
 #--------------Helper function to transfrom catrgories from vertor form into textual form-------------------------------
 def category_from_output(output):
-  inx = tensor.argmax(output).item()
+  inx = torch.argmax(output).item()
   return all_categories[inx]
 
 #-------------------------function for training network on single word-------------------------------------------------------------
@@ -44,8 +45,9 @@ optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
 
 def train(line_tensor, category_tensor):
   hidden = rnn.init_hidden()
+    
   for i in range(line_tensor.size()[0]):
-    output, hidden = rnn.(line_tensor[i], hidden)
+      output, hidden = rnn(line_tensor[i], hidden)
   loss = criterion(output, category_tensor)
   optimizer.zero_grad()
   loss.backward()
@@ -56,11 +58,12 @@ def train(line_tensor, category_tensor):
 #-------------------iterating on all training data using the train function for epoc number's times---------------------
 current_loss = 0
 all_loses = []
-n_iters = 150000
-print_steps = 5000
+n_iters = 100000
+print_steps = 10000
 
 for i in range(n_iters):
-  line, category, line_tensor, category_tensor = random_training_example(category_lines, all_categories)
+  category, line, category_tensor, line_tensor = random_training_example(category_lines, all_categories)
+ 
   output, loss = train(line_tensor, category_tensor)
   current_loss += loss
 
@@ -91,24 +94,3 @@ while True:
   if name == "quit":
     break
   predict(name)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    
